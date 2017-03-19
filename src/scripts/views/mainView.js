@@ -21,7 +21,7 @@ var MainView = React.createClass({
 		}
 	},
 	handleCheck: function(eventObj, i) {
-		if (this.state.finishedTaskObj[i]) {
+		if (this.state.taskArray[i].toggle === 'on') {
 			ACTIONS.itemUnchecked(i)
 		} else {
 			ACTIONS.itemChecked(i)
@@ -33,13 +33,23 @@ var MainView = React.createClass({
 		}
 	},
 	makeItem: function(singleItem, i) {
+		var displayProp
+		if((this.state.taskArray[i].toggle === 'on' && this.state.currentView === 'complete') 
+		|| (this.state.taskArray[i].toggle === 'off' && this.state.currentView === 'incomplete')
+		|| (this.state.currentView === 'all')) {
+			displayProp = 'block'
+		} else {
+			displayProp = 'none'
+		}
 		return(
-			<div className='singleTask'>
-				<p>{singleItem}</p>
+			<div 
+			className='singleTask'
+			style={{display: displayProp}}>
+				<p>{singleItem.name}</p>
 				<input 
-				type='checkbox' 
-				onChange={(eventObj)=>{this.handleCheck(eventObj, i)}}
-				value={this.state.finishedTaskObj[i]?'on':'off'} />
+				type='checkbox'
+				onChange={(eventObj)=>{this.handleCheck(eventObj, i)}} 
+				value={this.state.taskArray[i].toggle} />
 			</div>
 		)
 	},
@@ -52,9 +62,7 @@ var MainView = React.createClass({
 				currentView={this.state.currentView}
 				changeView={this.changeView} />
 				<ListDisplay 
-				items={this.state.taskArray} 
-				unDoneItems={this.state.currentTaskObj} 
-				doneItems={this.state.finishedTaskObj}
+				items={this.state.taskArray}  
 				makeItem={this.makeItem}
 				currentView={this.state.currentView} />
 			</div>
@@ -77,50 +85,25 @@ var ViewMenu = React.createClass({
 	render: function() {
 		return(
 			<div className='buttonDiv'>
+				<p className='viewButton allButton'
+				onClick={()=>{this.props.changeView('all')}}>All Tasks</p>
 				<p className='viewButton incompleteButton'
 				onClick={()=>{this.props.changeView('incomplete')}}>Incomplete Tasks</p>
 				<p className='viewButton completeButton'
 				onClick={()=>{this.props.changeView('complete')}}>Complete Tasks</p>
-				<p className='viewButton allButton'
-				onClick={()=>{this.props.changeView('all')}}>All Tasks</p>
 			</div>
 		)
 	}
 })
 
-//creating map function for objects so I don't have to make a new list item method
-//set up that way so I can have one master list array whose indecies coorespond to the keys
-//of the two other list objects
-Object.prototype.map = function(callback) {
-	var returnArray = []
-	for(var prop in this) {
-		returnArray.push(callback(this.prop, prop))
-	}
-	return returnArray
-}
-
 
 var ListDisplay = React.createClass({
-	render: function() {
-		if (this.props.currentView === 'all') {
-			return(
-				<div className='taskList allList'>
-					{this.props.items.map(this.props.makeItem)}
-				</div>
-			)
-		} else if (this.props.currentView === 'complete') {
-			return(
-				<div className='taskList completeList'>
-					{this.props.doneItems.map(this.props.makeItem)}
-				</div>
-			)
-		} else {
-			return(
-				<div className='taskList incompleteList'>
-					{this.props.unDoneItems.map(this.props.makeItem)}
-				</div>
-			)
-		}
+	render: function() {	
+		return( 
+			<div className='taskList'>
+				{this.props.items.map(this.props.makeItem)}
+			</div>
+		)
 	}
 })
 

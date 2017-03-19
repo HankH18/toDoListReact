@@ -3,23 +3,18 @@ import Backbone from 'backbone'
 var STORE = Object.assign({}, Backbone.Events, {
 	data: {
 		taskArray: [],
-		currentTaskObj: {},
-		finishedTaskObj: {},
 		currentView: 'all'
 	},
 	set: function(str) {
-		this.data.taskArray.push(str)
-		this.data.currentTaskObj[(this.data.taskArray.length-1)] = str
+		this.data.taskArray.push({name: str, toggle: 'off'})
 		this.trigger('dataUpdated')
 	},
 	itemDone: function(index) {
-		this.data.finishedTaskObj[index] = this.data.taskArray[index]
-		delete this.data.currentTaskObj[index]
+		this.data.taskArray[index].toggle = 'on'
 		this.trigger('dataUpdated')
 	},
 	itemUndone: function(index) {
-		this.data.currentTaskObj[index] = this.data.taskArray[index]
-		delete this.data.finishedTaskObj[index]
+		this.data.taskArray[index].toggle = 'off'
 		this.trigger('dataUpdated')
 	},
 	changeView: function(newView) {

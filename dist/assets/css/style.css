@@ -1,1 +1,1 @@
-*{font-family:Helvetica, Arial, sans-serif;box-sizing:border-box}h1{font-size:300px;text-align:center;color:fuchsia}
+*{font-family:Helvetica, Arial, sans-serif;box-sizing:border-box}h1{font-size:300px;text-align:center;color:fuchsia}p{display:inline-block}input{display:inline-block}.buttonDiv{text-align:center}.viewButton{display:inline-block;padding:10px;border-top:2px solid gray;border-left:2px solid gray}.completeButton{border-right:2px solid gray}.inputDiv{text-align:center}.taskList{border:2px solid gray;min-height:50vh;width:80%;margin:0 auto;text-align:center}
