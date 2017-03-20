@@ -45,8 +45,9 @@ var MainView = React.createClass({
 			<div 
 			className='singleTask'
 			style={{display: displayProp}}>
-				<p>{singleItem.name}</p>
-				<input 
+				<p className='taskText'>{singleItem.name}</p>
+				<input
+				className='checkBox' 
 				type='checkbox'
 				onChange={(eventObj)=>{this.handleCheck(eventObj, i)}} 
 				value={this.state.taskArray[i].toggle} />
@@ -56,15 +57,48 @@ var MainView = React.createClass({
 	render: function() {
 		return(
 			<div className='mainBody'>
-				<ListInput 
-				keyDownHandler={this.keyDownHandler} />
 				<ViewMenu 
 				currentView={this.state.currentView}
 				changeView={this.changeView} />
 				<ListDisplay 
-				items={this.state.taskArray}  
+				items={this.state.taskArray}
+				keyDownHandler={this.keyDownHandler}  
 				makeItem={this.makeItem}
 				currentView={this.state.currentView} />
+			</div>
+		)
+	}
+})
+
+var ViewMenu = React.createClass({
+	render: function() {
+		var currentPage = this.props.currentView
+		return(
+			<div className='buttonDiv'>
+				<p className='viewButton allButton'
+				onClick={()=>{this.props.changeView('all')}}
+				style={currentPage==='all'?{background: 'red'}:{background: 'gray'}}>
+				All Tasks</p>
+				<p className='viewButton incompleteButton'
+				onClick={()=>{this.props.changeView('incomplete')}}
+				style={currentPage==='incomplete'?{background: 'red'}:{background: 'gray'}}>
+				Incomplete Tasks</p>
+				<p className='viewButton completeButton'
+				onClick={()=>{this.props.changeView('complete')}}
+				style={currentPage==='complete'?{background: 'red'}:{background: 'gray'}}>
+				Complete Tasks</p>
+			</div>
+		)
+	}
+})
+
+
+var ListDisplay = React.createClass({
+	render: function() {	
+		return( 
+			<div className='taskList'>
+				<ListInput keyDownHandler={this.props.keyDownHandler} />
+				{this.props.items.map(this.props.makeItem)}
 			</div>
 		)
 	}
@@ -76,32 +110,6 @@ var ListInput = React.createClass({
 			<div className='inputDiv'>
 				<input type='text' placeholder='Add New List Items' 
 				onKeyDown={this.props.keyDownHandler} />
-			</div>
-		)
-	}
-})
-
-var ViewMenu = React.createClass({
-	render: function() {
-		return(
-			<div className='buttonDiv'>
-				<p className='viewButton allButton'
-				onClick={()=>{this.props.changeView('all')}}>All Tasks</p>
-				<p className='viewButton incompleteButton'
-				onClick={()=>{this.props.changeView('incomplete')}}>Incomplete Tasks</p>
-				<p className='viewButton completeButton'
-				onClick={()=>{this.props.changeView('complete')}}>Complete Tasks</p>
-			</div>
-		)
-	}
-})
-
-
-var ListDisplay = React.createClass({
-	render: function() {	
-		return( 
-			<div className='taskList'>
-				{this.props.items.map(this.props.makeItem)}
 			</div>
 		)
 	}
