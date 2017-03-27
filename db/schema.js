@@ -15,6 +15,13 @@ const usersSchema = new mongoose.Schema({
 
 })
 
+const choreSchema = new mongoose.Schema({
+	name: {type: String, required: true},
+	status: {type: String, default: 'off'},
+	createdAt: {type: Date, default: Date.now()}
+})
+
 module.exports = {
-  User: mongoose.model('User', usersSchema)
+  	User: mongoose.model('User', usersSchema),
+  	Chore: mongoose.model('Chore', choreSchema)
 }

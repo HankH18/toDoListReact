@@ -6,6 +6,7 @@ import ACTIONS from '../actions'
 
 var MainView = React.createClass({
 	componentWillMount: function() {
+		ACTIONS.fetchAllChores()
 		STORE.on('dataUpdated', () => {
 			this.setState(STORE.data)
 		})
@@ -15,16 +16,19 @@ var MainView = React.createClass({
 	},
 	keyDownHandler: function(eventObj) {
 		if (eventObj.keyCode === 13) {
-			var input = eventObj.target.value
-			ACTIONS.addListItem(input)
+			var input = {
+				name: eventObj.target.value
+			}
+			ACTIONS.addChore(input)
 			eventObj.target.value = ''
+			console.log(this.state)
 		}
 	},
 	handleCheck: function(eventObj, i) {
-		if (this.state.taskArray[i].toggle === 'on') {
-			ACTIONS.itemUnchecked(i)
+		if (this.state.choreCollection.models[i].attributes.status === 'on') {
+			ACTIONS.itemUnchecked(this.state.choreCollection.models[i])
 		} else {
-			ACTIONS.itemChecked(i)
+			ACTIONS.itemChecked(this.state.choreCollection.models[i])
 		}
 	},
 	changeView: function(newView) {
@@ -34,8 +38,9 @@ var MainView = React.createClass({
 	},
 	makeItem: function(singleItem, i) {
 		var displayProp
-		if((this.state.taskArray[i].toggle === 'on' && this.state.currentView === 'complete') 
-		|| (this.state.taskArray[i].toggle === 'off' && this.state.currentView === 'incomplete')
+		var itemAttributes = this.state.choreCollection.models[i].attributes
+		if((itemAttributes.status === 'on' && this.state.currentView === 'complete') 
+		|| (itemAttributes.status === 'off' && this.state.currentView === 'incomplete')
 		|| (this.state.currentView === 'all')) {
 			displayProp = 'block'
 		} else {
@@ -45,12 +50,12 @@ var MainView = React.createClass({
 			<div 
 			className='singleTask'
 			style={{display: displayProp}}>
-				<p className='taskText'>{singleItem.name}</p>
+				<p className='taskText'>{singleItem.attributes.name}</p>
 				<input
 				className='checkBox' 
 				type='checkbox'
 				onChange={(eventObj)=>{this.handleCheck(eventObj, i)}} 
-				value={this.state.taskArray[i].toggle} />
+				value={itemAttributes.status} />
 			</div>
 		)
 	},
@@ -61,7 +66,7 @@ var MainView = React.createClass({
 				currentView={this.state.currentView}
 				changeView={this.changeView} />
 				<ListDisplay 
-				items={this.state.taskArray}
+				items={this.state.choreCollection.models}
 				keyDownHandler={this.keyDownHandler}  
 				makeItem={this.makeItem}
 				currentView={this.state.currentView} />

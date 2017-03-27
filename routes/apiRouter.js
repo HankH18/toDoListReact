@@ -3,6 +3,7 @@ const apiRouter = Router()
 let helpers = require('../config/helpers.js')
 
 let User = require('../db/schema.js').User
+let Chore = require('../db/schema.js').Chore
 
   
   apiRouter
@@ -47,5 +48,43 @@ let User = require('../db/schema.js').User
 
     // Routes for a Model(resource) should have this structure
 
+  apiRouter
+    .get('/myChores', function(request, response) {
+      Chore.find(request.query, function(error, records) {
+        if (error) {
+          return response.status(400).json(error)
+        }
+        response.json(records)
+      })
+    })
+
+    .post('/myChores', function(request, response) {
+      var newChore = new Chore(request.body)
+      newChore.save(function(error, records) {
+        if (error) {
+          return response.status(400).json(error)
+        }
+        response.json(records)
+      })
+    })
+
+    .put('/myChores/:id', function(request, response) {
+      Chore.findByIdAndUpdate(request.params.id, request.body, {new: true}, function(error, record) {
+        if (error) {
+          return response.status(400).json(error)
+        }
+        response.json(record)
+      })
+    })
+
+    .delete('/myChores/:id', function(request, response) {
+      Chore.remove({id: request.params.id}, (err) => {
+        if(err) {return response.status(400).json(err)}
+        response.json({
+          msg: `chore with id ${request.params.id} successfully deleted`,
+          id: request.params.id
+        }) 
+      })
+    })
 
 module.exports = apiRouter

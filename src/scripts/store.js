@@ -1,20 +1,19 @@
 import Backbone from 'backbone'
+import {ChoreCollection} from './models/collections.js'
 
 var STORE = Object.assign({}, Backbone.Events, {
 	data: {
-		taskArray: [],
+		choreCollection: new ChoreCollection(),
 		currentView: 'all'
 	},
-	set: function(str) {
-		this.data.taskArray.push({name: str, toggle: 'off'})
-		this.trigger('dataUpdated')
+	get: function(prop) {
+		if (this.data[prop] === undefined) {
+			throw new Error("The store doesn't have a property called " + prop)
+		}
+		return this.data[prop]
 	},
-	itemDone: function(index) {
-		this.data.taskArray[index].toggle = 'on'
-		this.trigger('dataUpdated')
-	},
-	itemUndone: function(index) {
-		this.data.taskArray[index].toggle = 'off'
+	set: function(attrs) {
+		this.data = Object.assign(this.data, attrs)
 		this.trigger('dataUpdated')
 	},
 	changeView: function(newView) {
