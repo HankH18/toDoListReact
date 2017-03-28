@@ -8,6 +8,7 @@ var MainView = React.createClass({
 	componentWillMount: function() {
 		ACTIONS.fetchAllChores()
 		STORE.on('dataUpdated', () => {
+			console.log('data updated triggered')
 			this.setState(STORE.data)
 		})
 	},
@@ -31,6 +32,9 @@ var MainView = React.createClass({
 			ACTIONS.itemChecked(this.state.choreCollection.models[i])
 		}
 	},
+	handleDelete: function(eventObj, i) {
+		ACTIONS.deleteChore(this.state.choreCollection.models[i])
+	},
 	changeView: function(newView) {
 		if (newView != this.state.currentView) {
 			ACTIONS.viewChanged(newView)
@@ -50,12 +54,15 @@ var MainView = React.createClass({
 			<div 
 			className='singleTask'
 			style={{display: displayProp}}>
-				<p className='taskText'>{singleItem.attributes.name}</p>
+				<p className='taskText'>{itemAttributes.name}</p>
 				<input
 				className='checkBox' 
 				type='checkbox'
 				onChange={(eventObj)=>{this.handleCheck(eventObj, i)}} 
-				value={itemAttributes.status} />
+				defaultChecked={itemAttributes.status === 'on' ? true : false} />
+				<button 
+				className='deleteButton' 
+				onClick={(eventObj)=>{this.handleDelete(eventObj, i)}}>X</button>
 			</div>
 		)
 	},
@@ -66,7 +73,7 @@ var MainView = React.createClass({
 				currentView={this.state.currentView}
 				changeView={this.changeView} />
 				<ListDisplay 
-				items={this.state.choreCollection.models}
+				items={this.state.choreCollection}
 				keyDownHandler={this.keyDownHandler}  
 				makeItem={this.makeItem}
 				currentView={this.state.currentView} />

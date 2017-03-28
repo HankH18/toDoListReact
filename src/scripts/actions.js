@@ -7,7 +7,7 @@ var ACTIONS = {
 		var newChore = new ChoreModel(choreData)
 		newChore.save()
 			.then(
-				function(response) {
+				function(resp) {
 					ACTIONS.fetchAllChores()
 				},
 				function(err) {
@@ -44,7 +44,10 @@ var ACTIONS = {
 	},
 	deleteChore: function(model) {
 		model.destroy()
-			.done(ACTIONS.fetchAllChores())
+			.done(function(resp) {
+				console.log(resp)
+				ACTIONS.fetchAllChores()
+			})
 			.fail(function(err) {
 				alert("Problem deleting chore")
 				console.log(err)
@@ -63,16 +66,5 @@ var ACTIONS = {
 			})
 	}
 }
-	//addListItem: function(str) {
-		//STORE.set(str)
-	//},
-	//itemChecked: function(index) {
-		//STORE.itemDone(index)
-	//},
-	//itemUnchecked: function(index) {
-		//STORE.itemUndone(index)
-	//}
-
-//action methods to change: addListItem->addChore itemChecked-> itemUnchecked-> viewChangex
 
 export default ACTIONS

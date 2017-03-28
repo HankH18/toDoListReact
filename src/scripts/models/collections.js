@@ -1,14 +1,11 @@
 import Backbone from 'backbone'
 
-export var ChoreModel = Backbone.Model.extend({
-	urlRoot: '/url/myChores',
+export const ChoreModel = Backbone.Model.extend({
+	urlRoot: '/api/myChores',
 	idAttribute: '_id'
 })
 
-export var ChoreCollection = Backbone.Collection.extend({
-	comparator: function(mod) {
-		return new Date(mod.get('createdAt')).getTime() * -1
-	},
+export const ChoreCollection = Backbone.Collection.extend({
 	model: ChoreModel,
-	url: '/url/myChores'
+	url: '/api/myChores'
 })

@@ -68,8 +68,8 @@ let Chore = require('../db/schema.js').Chore
       })
     })
 
-    .put('/myChores/:id', function(request, response) {
-      Chore.findByIdAndUpdate(request.params.id, request.body, {new: true}, function(error, record) {
+    .put('/myChores/:_id', function(request, response) {
+      Chore.findByIdAndUpdate(request.params._id, request.body, {new: true}, function(error, record) {
         if (error) {
           return response.status(400).json(error)
         }
@@ -77,12 +77,12 @@ let Chore = require('../db/schema.js').Chore
       })
     })
 
-    .delete('/myChores/:id', function(request, response) {
-      Chore.remove({id: request.params.id}, (err) => {
+    .delete('/myChores/:_id', function(request, response) {
+      Chore.remove({_id: request.params._id}, (err) => {
         if(err) {return response.status(400).json(err)}
         response.json({
-          msg: `chore with id ${request.params.id} successfully deleted`,
-          id: request.params.id
+          msg: `chore with id ${request.params._id} successfully deleted`,
+          id: request.params._id
         }) 
       })
     })
