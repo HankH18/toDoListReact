@@ -8,7 +8,6 @@ var MainView = React.createClass({
 	componentWillMount: function() {
 		ACTIONS.fetchAllChores()
 		STORE.on('dataUpdated', () => {
-			console.log('data updated triggered')
 			this.setState(STORE.data)
 		})
 	},
@@ -22,7 +21,6 @@ var MainView = React.createClass({
 			}
 			ACTIONS.addChore(input)
 			eventObj.target.value = ''
-			console.log(this.state)
 		}
 	},
 	handleCheck: function(eventObj, i) {
